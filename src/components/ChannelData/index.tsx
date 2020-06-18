@@ -1,11 +1,31 @@
-import React, { useRef, useEffect } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  ChangeEvent,
+  KeyboardEvent,
+  createRef,
+} from 'react';
+import { format } from 'date-fns';
 
 import { Container, Messages, InpurWrapper, Input, InputIcon } from './style';
 
 import { ChannelMessage, Mention } from '../ChannelMessage';
 
+interface MessageProps {
+  message: string;
+  date: string;
+  length?: number;
+}
+
 export const ChannelData = () => {
   const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [message, setMessage] = useState('');
+  const [date, setDate] = useState(
+    String(format(new Date(), "dd'/'MM'/'yyyy")),
+  );
+  const [messageOnBoard, setMessageOnBoard] = useState<MessageProps[]>([]);
 
   useEffect(() => {
     const div = messagesRef.current;
@@ -15,29 +35,49 @@ export const ChannelData = () => {
     }
   }, [messagesRef]);
 
+  const clearRef = createRef<HTMLInputElement>();
+
+  const handleMessages = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setMessage(event.currentTarget.value);
+      console.log(message);
+    },
+    [message],
+  );
+  const handleMessageHour = useCallback(
+    (event: number) => {
+      if (event === 13) {
+        setDate(format(new Date(), "dd'/'MM'/'yyyy"));
+        setMessageOnBoard([...messageOnBoard, { message, date }]);
+        setMessage('');
+
+        if (clearRef.current) {
+          clearRef.current.value = '';
+        }
+      }
+    },
+    [clearRef, date, message, messageOnBoard],
+  );
+
   return (
     <Container>
       <Messages ref={messagesRef}>
-        {Array.from(Array(15).keys()).map(n => (
+        {messageOnBoard.map(mess => (
           <ChannelMessage
-            key={n}
-            author="Luiz Adamchuk"
-            date="18/06/2020"
-            content="Mensagem de teste"
+            key={Number(mess.length)}
+            author="Visitante"
+            date={mess.date}
+            content={mess.message}
           />
         ))}
 
         <ChannelMessage
           author="Luiz Adamchuk"
-          date="18/06/2020"
-          content="Mensagem de teste"
-        />
-        <ChannelMessage
-          author="Luiz Adamchuk"
-          date="18/06/2020"
+          date={format(new Date(), "dd'/'MM'/'yyyy")}
           content={
             <>
-              <Mention>@Luiz Adamchuk</Mention>, testando mensagem
+              Olá <Mention>@Visitante</Mention>, faça um teste você mesmo!!
+              Escreva abaixo...
             </>
           }
           isBot
@@ -46,7 +86,15 @@ export const ChannelData = () => {
       </Messages>
 
       <InpurWrapper>
-        <Input placeholder="Conversar em #chat-livre" />
+        <Input
+          ref={clearRef}
+          type="text"
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            handleMessages(event)
+          }
+          onKeyUp={(event: KeyboardEvent) => handleMessageHour(event.keyCode)}
+          placeholder="Conversar em #chat-livre"
+        />
         <InputIcon />
       </InpurWrapper>
     </Container>

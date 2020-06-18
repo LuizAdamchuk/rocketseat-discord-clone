@@ -21,10 +21,10 @@ export const UserList: React.FC = () => {
   return (
     <Container>
       <Role>Disponível - 1</Role>
-      <UserRow nickname="Luiz Alberto Adamchuk Junior" />
+      <UserRow nickname="Visitante" />
 
-      <Role>Offline - 18</Role>
-      <UserRow nickname="Fulano" isBot />
+      <Role>Offline - 17</Role>
+      <UserRow nickname="Luiz Adamchuk" isBot />
 
       {Array.from(Array(16).keys()).map(n => (
         <UserRow nickname="Fulano" />
