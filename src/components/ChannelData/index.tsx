@@ -46,12 +46,12 @@ export const ChannelData = () => {
   );
   const handleMessageHour = useCallback(
     (event: number) => {
-      if (event === 13) {
-        setDate(format(new Date(), "dd'/'MM'/'yyyy"));
-        setMessageOnBoard([...messageOnBoard, { message, date }]);
-        setMessage('');
+      if (clearRef.current) {
+        if (event === 13 && !!clearRef.current.value) {
+          setDate(format(new Date(), "dd'/'MM'/'yyyy"));
+          setMessageOnBoard([...messageOnBoard, { message, date }]);
+          setMessage('');
 
-        if (clearRef.current) {
           clearRef.current.value = '';
         }
       }
