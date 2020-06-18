@@ -74,6 +74,12 @@ export const Content = styled.div`
   font-size: 16px;
   color: var(--white);
   opacity: 0.6;
+
+  > a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #ff9000;
+  }
 `;
 
 export const Mention = styled.span`

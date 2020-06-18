@@ -77,7 +77,11 @@ export const ChannelData = () => {
           content={
             <>
               Olá <Mention>@Visitante</Mention>, faça um teste você mesmo!!
-              Escreva abaixo...
+              Escreva abaixo... E para saber mais entre no repositório do{' '}
+              <a href="https://github.com/LuizAdamchuk/rocketseat-discord-clone">
+                Github
+              </a>
+              .
             </>
           }
           isBot
